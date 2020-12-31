@@ -9,33 +9,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringExcercise2 {
-    String rootPath;
-    List<SDRFile> sdrFiles = new ArrayList<>();
-    Map<String, List<String>> phoneNumbersOfInput = new HashMap<>();
-    Map<String, List<String>> phoneNumbersOfOutput = new HashMap<>();
+    static String rootPath;
+    static List<SDRFile> sdrFiles = new ArrayList<>();
+    static Map<String, List<String>> phoneNumbersOfInput = new HashMap<>();
+    static Map<String, List<String>> phoneNumbersOfOutput = new HashMap<>();
 
     public static void main(String[] args) {
 
-        StringExcercise2 stringExcercise2 = new StringExcercise2( "/home/ngoctm/SDR");
         try {
-            stringExcercise2.runTest();
+            StringExcercise2.runTest("/home/ngoctm/SDR");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public StringExcercise2(String rootPath){
-        this.rootPath = rootPath;
-    }
-
-    public void runTest() throws IOException {
+    public static void runTest(String path) throws IOException {
+        rootPath = path;
         loadListFile(rootPath);
         filterPhoneNumberByDate();
         comparePhoneNumbers(FileType.INPUT);
         comparePhoneNumbers(FileType.OUTPUT);
     }
 
-    public void loadListFile(String path){
+    public static void loadListFile(String path){
         File[] files = new File(path).listFiles();
         for(File file : files){
             if(file.isFile()){
@@ -46,7 +42,7 @@ public class StringExcercise2 {
         }
     }
 
-    private void handingPathSDRFile(String path) {
+    private static void handingPathSDRFile(String path) {
         String[] parts = path.split("/");
         String indexFolderName = parts[parts.length - 3];
         SDRFile sdrFile = new SDRFile();
@@ -64,7 +60,7 @@ public class StringExcercise2 {
 
     }
 
-    public boolean validPathFile(SDRFile sdrFile){
+    public static boolean validPathFile(SDRFile sdrFile){
         String regexInput = ".*cdr_([0-9]{8})_8x56_[0-9].txt";
         String regexOutput = ".*/([0-9]{8})_8x56_[0-9].txt";
         String regex;
@@ -83,7 +79,7 @@ public class StringExcercise2 {
         return false;
     }
 
-    public void filterPhoneNumberByDate() throws FileNotFoundException {
+    public static void filterPhoneNumberByDate() throws FileNotFoundException {
         for(SDRFile sdrFile : sdrFiles){
            if(sdrFile.getFileType() == FileType.INPUT){
                addSDRFileToMapByDate(sdrFile, phoneNumbersOfInput);
@@ -93,7 +89,7 @@ public class StringExcercise2 {
         }
     }
 
-    public void addSDRFileToMapByDate(SDRFile sdrFile, Map<String, List<String>> mapPhoneNumber)
+    public static void addSDRFileToMapByDate(SDRFile sdrFile, Map<String, List<String>> mapPhoneNumber)
             throws FileNotFoundException {
         if(mapPhoneNumber.containsKey(sdrFile.getDate())){
             List<String> phoneNumbers = mapPhoneNumber.get(sdrFile.getDate());
@@ -104,7 +100,7 @@ public class StringExcercise2 {
     }
 
 
-    public List<String> readPhoneNumbers(SDRFile sdrFile) throws FileNotFoundException {
+    public static List<String> readPhoneNumbers(SDRFile sdrFile) throws FileNotFoundException {
         List<String> phoneNumbers = new ArrayList<>();
         Scanner scanner = new Scanner(new File(sdrFile.getPath()));
         while (scanner.hasNextLine()){
@@ -117,7 +113,7 @@ public class StringExcercise2 {
         return phoneNumbers;
     }
 
-    public boolean validPhoneNumber(String phoneNumber){
+    public static boolean validPhoneNumber(String phoneNumber){
         String regex = "849[0-9]{7}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phoneNumber);
@@ -127,7 +123,7 @@ public class StringExcercise2 {
         return false;
     }
 
-    public void comparePhoneNumbers(FileType fileTypeNeedFilter) throws IOException {
+    public static void comparePhoneNumbers(FileType fileTypeNeedFilter) throws IOException {
         if(fileTypeNeedFilter == FileType.INPUT){  // input available but output not
             Map<String, List<String>> resultMap = compareMapPhoneNumbers(phoneNumbersOfInput, phoneNumbersOfOutput);
             writeToFile(resultMap, "input_co.txt");
@@ -137,8 +133,8 @@ public class StringExcercise2 {
         }
     }
 
-    public Map<String, List<String>> compareMapPhoneNumbers(Map<String, List<String>> mapAvailablePhoneNumber,
-                                       Map<String, List<String>> mapNotAvailablePhoneNumber){
+    public static Map<String, List<String>> compareMapPhoneNumbers(Map<String, List<String>> mapAvailablePhoneNumber,
+                                                                   Map<String, List<String>> mapNotAvailablePhoneNumber){
         Map<String, List<String>> resultMap = new HashMap<>();
         for (String key : mapNotAvailablePhoneNumber.keySet()){
             if(mapAvailablePhoneNumber.containsKey(key)){
@@ -150,7 +146,7 @@ public class StringExcercise2 {
         return resultMap;
     }
 
-    public List<String> filterDifferencePhoneNumbers(List<String> noAvailable, List<String> available){
+    public static List<String> filterDifferencePhoneNumbers(List<String> noAvailable, List<String> available){
         HashSet<String> results = new HashSet<>();
         for(String phoneNumber : available){
             if(!noAvailable.contains(phoneNumber)){
@@ -160,7 +156,7 @@ public class StringExcercise2 {
         return new ArrayList<>(results);
     }
 
-    private void writeToFile(Map<String, List<String>> content, String fileName) throws IOException {
+    private static void writeToFile(Map<String, List<String>> content, String fileName) throws IOException {
         String pathFileOutput = rootPath + "/" + fileName;
         File fileOutput = new File(pathFileOutput);
         StringBuilder contentBuilder = new StringBuilder();

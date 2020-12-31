@@ -9,27 +9,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class StringExcercise1 {
-    String pathFile;
-    StringBuilder contentFile;
-
-    public StringExcercise1(String pathFile){
-        this.pathFile = pathFile;
-    }
-
-    public void runExercise() {
-            readFile();
+    static StringBuilder contentFile;
+    public static void runExercise(String pathFile) {
+            readFile(pathFile);
             checkUpperCaseAndLowerCase();
             deleteSpace();
             insertString();
             replaceString();
-            writeToFile();
+            writeToFile(pathFile);
     }
 
-    public void readFile() {
+    public static void readFile(String pathFile) {
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new File(this.pathFile));
-            this.contentFile = new StringBuilder();
+            scanner = new Scanner(new File(pathFile));
+            contentFile = new StringBuilder();
             while (scanner.hasNextLine()){
                 String tempString = scanner.nextLine();
                 contentFile.append(tempString + "\n");
@@ -41,7 +35,7 @@ public class StringExcercise1 {
         }
     }
 
-    private void checkUpperCaseAndLowerCase(){
+    private static void checkUpperCaseAndLowerCase(){
         List<Character> listUpperCase = new ArrayList<>();
         int numberOfchar = 0;
         int numberOfLowerCase = 0;
@@ -58,12 +52,12 @@ public class StringExcercise1 {
 
     }
 
-    private void printLowerCase(int numberOfLowerCase, int numberOfchar) {
+    private static void printLowerCase(int numberOfLowerCase, int numberOfchar) {
         System.out.println("So luong ky tu: " + numberOfchar);
         System.out.println("So ky tu thuong: " + numberOfLowerCase);
     }
 
-    private void printUpperCase(List<Character> listUpperCase) {
+    private static void printUpperCase(List<Character> listUpperCase) {
         System.out.println("Cac ky tu in hoa: ");
         for(char temp : listUpperCase){
             System.out.print(temp + " ");
@@ -71,7 +65,7 @@ public class StringExcercise1 {
         System.out.println();
     }
 
-    private void deleteSpace() {
+    private static void deleteSpace() {
         System.out.println("Xoa khoang trang thua");
         char tab = 9; // ascII of tab
         char enter = 10; // ascII of enter
@@ -87,7 +81,7 @@ public class StringExcercise1 {
         }
     }
 
-    private void insertString(){
+    private static void insertString(){
         System.out.println("chen 'o con ga cua toi' vao sau '$'");
         String oldString = "$";
         String addingString = "o con ga cua toi";
@@ -97,7 +91,7 @@ public class StringExcercise1 {
 
     }
 
-    private void replaceString(){
+    private static void replaceString(){
         System.out.println("Doi 'Toi yeu ha noi pho' thanh in hoa");
         String oldString = "Toi yeu ha noi pho";
         String newString = oldString.toUpperCase();
@@ -107,7 +101,7 @@ public class StringExcercise1 {
     }
 
 
-    private void writeToFile(){
+    private static void writeToFile(String pathFile){
         String pathFileOutput = pathFile.replace("inPut", "outPut");
         File fileOutput = new File(pathFileOutput);
         if(!fileOutput.exists()) {
@@ -127,12 +121,8 @@ public class StringExcercise1 {
         }
 
     }
-    public void print(String content){
-            System.out.println(content);
-    }
 
     public static void main(String[] args) {
-        StringExcercise1 stringExcercise1 = new StringExcercise1("/home/ngoctm/String/inPut1.txt");
-        stringExcercise1.runExercise();
+        StringExcercise1.runExercise("/home/ngoctm/String/inPut1.txt");
     }
 }
